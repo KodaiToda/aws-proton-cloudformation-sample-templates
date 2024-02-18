@@ -61,7 +61,7 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
     DependsOn:
-      - GatewayAttachement
+      - GatewayAttachment
   PublicSubnet1EIP:
     Type: 'AWS::EC2::EIP'
     Properties:
