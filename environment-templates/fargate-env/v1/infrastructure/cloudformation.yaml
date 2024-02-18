@@ -16,6 +16,11 @@ Mappings:
     Private2:
       CIDR: '{{ environment.inputs.private_subnet_two_cidr}}'   
 
+Parameters:
+  PJenv:
+    Type: String
+    Default: '{{ environment.inputs.project_env}}'   
+
 Resources:
   VPC:
     Type: 'AWS::EC2::VPC'
@@ -24,6 +29,9 @@ Resources:
       EnableDnsHostnames: true
       EnableDnsSupport: true
       InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: !Sub "poc-${PJenv}-vpc"
   PublicSubnet1:
     Type: 'AWS::EC2::Subnet'
     Properties:
@@ -34,6 +42,9 @@ Resources:
          - 0
          - Fn::GetAZs: {Ref: 'AWS::Region'}
       MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "poc-${PJenv}-publicsubnet1"
   PublicSubnet1RouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -72,6 +83,9 @@ Resources:
          - 1
          - Fn::GetAZs: {Ref: 'AWS::Region'}
       MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "poc-${PJenv}-publicsubnet2"
   PublicSubnet2RouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -110,6 +124,9 @@ Resources:
          - 0
          - Fn::GetAZs: {Ref: 'AWS::Region'}
       MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "poc-${PJenv}-privatesubnet1"
   PrivateSubnet1RouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -135,6 +152,9 @@ Resources:
          - 1
          - Fn::GetAZs: {Ref: 'AWS::Region'}
       MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub "poc-${PJenv}-privatesubnet2"
   PrivateSubnet2RouteTable:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -152,6 +172,9 @@ Resources:
       NatGatewayId: !Ref PublicSubnet2NATGateway
   InternetGateway:
     Type: 'AWS::EC2::InternetGateway'
+    Tags:
+      - Key: Name
+        Value: !Sub "igw-poc-${PJEnv}"
   GatewayAttachement:
     Type: 'AWS::EC2::VPCGatewayAttachment'
     Properties:
